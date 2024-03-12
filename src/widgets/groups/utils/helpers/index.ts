@@ -8,6 +8,7 @@ export function getAllAvatarColors(groups: Group[]): string[] {
 			colors.push(group.avatar_color)
 		}
 	}
+	colors.unshift("Все")
 
 	return colors
 }

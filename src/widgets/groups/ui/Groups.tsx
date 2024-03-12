@@ -12,18 +12,44 @@ export default function Groups() {
 	const { result, data } = useGroups()
 
 	const [filteredData, setFilteredData] = useState<Group[]>()
+	const [colors, setColors] = useState<string[]>(["Все"])
 
 	useEffect(() => {
 		if (data) {
 			setFilteredData(data)
+			setColors(getAllAvatarColors(data))
 		}
 	}, [data])
 
 	const [filterOptions, setFilterOptions] = useState({
 		avatarColor: "Все",
-		closed: "Да",
-		myFriends: "Да"
+		closed: "Все",
+		myFriends: "Нет"
 	})
+
+	useEffect(() => {
+		if (data) {
+			setFilteredData(data.filter(group => {
+				// Фильтрация по цвету аватара
+				if (filterOptions.avatarColor !== 'Все' && group.avatar_color !== filterOptions.avatarColor) {
+					return false
+				}
+
+				// Фильтрация по закрытости группы
+				if (filterOptions.closed !== 'Все' && group.closed !== (filterOptions.closed === 'Да')) {
+					return false
+				}
+
+				// Фильтрация по наличию друзей
+				if (filterOptions.myFriends === 'Да' && (!group.friends || group.friends.length === 0)) {
+					return false
+				}
+
+				return true
+			}))
+		}
+
+	}, [filterOptions])
 
 	const handleChangeAvatar = (value: string) => {
 		setFilterOptions({
@@ -48,25 +74,27 @@ export default function Groups() {
 
 	return (
 		<>
-			<FiltersByGroups
-				onFilterAvatar={handleChangeAvatar}
-				onFilterClosed={handleChangeClosed}
-				onFilterFriends={handleChangeFriends}
-				filterOptions={filterOptions}
-				arrayColor={getAllAvatarColors(data)}
-				arrayClosed={["Да", "Нет", "Все"]}
-				arrayFriends={["Да", "Нет"]}
-			/>
+
 			{
 				result === 0 ?
 					<div>Ошибка, данные не пришли</div>
 					: <div>
 						{
 							filteredData === undefined ?
+
 								<div>
 									Ошибка в получении списка групп
 								</div>
 								: <div className='groups'>
+									<FiltersByGroups
+										onFilterAvatar={handleChangeAvatar}
+										onFilterClosed={handleChangeClosed}
+										onFilterFriends={handleChangeFriends}
+										filterOptions={filterOptions}
+										arrayColor={colors}
+										arrayClosed={["Да", "Нет", "Все"]}
+										arrayFriends={["Да", "Нет"]}
+									/>
 									<div className="groups__title">Список групп</div>
 
 									{

@@ -7,7 +7,8 @@ npm i
 
 Запустить json-server
 ``
-json-server --watch groups.json --port 3001
+json-server --watch ./src/app/data/groups.json 
+--port 3001
 ``
 
 Запустить приложение
