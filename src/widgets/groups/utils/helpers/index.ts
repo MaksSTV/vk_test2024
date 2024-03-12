@@ -12,3 +12,21 @@ export function getAllAvatarColors(groups: Group[]): string[] {
 
 	return colors
 }
+
+export function filterGroups(groups: Group[], avatarColor: string, closed: string, myFriends: string) {
+	return groups.filter(group => {
+		if (avatarColor !== 'Все' && group.avatar_color !== avatarColor) {
+			return false
+		}
+
+		if (closed !== 'Все' && group.closed !== (closed === 'Закрытые')) {
+			return false
+		}
+
+		if (myFriends === 'Да' && (!group.friends || group.friends.length === 0)) {
+			return false
+		}
+
+		return true
+	})
+}
