@@ -1,19 +1,10 @@
-import { useEffect, useState } from 'react'
-import { GetGroups } from '../api/index'
+import { Groups } from '../../../widgets'
 
-export function Main() {
-
-	//const [groups, setGroups] = useState<GetGroupsResponse[]>()
-
-	useEffect(() => {
-		GetGroups("http://localhost:3001/groups")
-			.then(data => console.log(data))
-	}, [])
-
+export default function Main() {
 
 	return (
 		<>
-
+			<Groups />
 		</>
 	)
 }
